@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Тест на порядок выполнения скриптов</title>
+  </head>
+  <body>
+    <script src="timer.js"></script>
+    <script src="async.js" async></script>
+    <script src="defer.js" defer></script>
+    <script>console.timeEnd('last');</script>
+  </body>
+</html>
