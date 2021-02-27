@@ -2,21 +2,20 @@
 
 // 1. С помощью цикла while вывести все простые числа в промежутке от 0 до 100.
 
-let i = 1;
+let i = 2;
 
 while (i < 100) {
-  let j = 1;
+  let j = 2;
   let isSimple = false;
 
   while (j <= i) {
-    if ((j > 1 && j < i) && (i % j === 0)) {
+    if (j < i && i % j === 0) {
       break
     } else {
+      if (j === i) isSimple = true;
       j++
     }
-    if (j === i) isSimple = true;
   }
-
   if (isSimple) console.log(i);
   i++
 };
