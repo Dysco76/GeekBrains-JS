@@ -1,0 +1,34 @@
+<meta charset="UTF-8">
+<script>
+  "use strict";
+  const basket = [ // !{}
+    ['Ноутбук', 45000, 1], // {}
+    ['Мышька', 1000, 2], // {}
+  ];
+
+  // Вариант через for
+  // function countBasketPrice(basket) {
+  //   let totalPrice = 0;
+  //   for (let i = 0; i < basket.length; i++) {
+  //     totalPrice += basket[i][1] * basket[i][2];
+  //   }
+  //   return totalPrice;
+  // }
+  // Вариант через forEach
+  // function countBasketPrice(basket) {
+  //   let totalPrice = 0;
+  //   basket.forEach((cartItem) => {
+  //     totalPrice += cartItem[1] * cartItem[2];
+  //   });
+  //   return totalPrice;
+  // }
+  // Самый оптимальный вариант через reduce
+  function countBasketPrice(basket) {
+    // return basket.reduce((totalPrice, cartItem) => totalPrice + cartItem[1] * cartItem[2], 0);
+    return basket.reduce((totalPrice, cartItem) => {
+        return totalPrice + cartItem[1] * cartItem[2];
+    }, 0);
+  }
+
+  console.log(countBasketPrice(basket));
+</script>
