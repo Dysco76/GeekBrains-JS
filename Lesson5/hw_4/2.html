@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Задание 2</title>
+</head>
+<body>
+  <script>
+    /**
+     * Реализация в псевдо ООП. Описали сущность корзины.
+     * @type {{goods: [{id_product: number, quantity: number, price: number, product_name: string}, {id_product: number, quantity: number, price: number, product_name: string}], countBasketPrice(): *}}
+     */
+    const basket = {
+      goods: [
+        {
+          id_product: 123,
+          product_name: "Ноутбук",
+          price: 45600,
+          quantity: 1
+        },
+        {
+          id_product: 456,
+          product_name: "Мышка",
+          price: 1000,
+          quantity: 3
+        }
+      ],
+      countBasketPrice() {
+        return this.goods.reduce((totalPrice, cartItem) => totalPrice + cartItem.price * cartItem.quantity, 0);
+      }
+    };
+
+    console.log(basket.countBasketPrice());
+  </script>
+</body>
+</html>

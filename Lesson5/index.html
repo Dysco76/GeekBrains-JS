@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="id-test">
+    <h1>Тестовая страница</h1>
+    <div class="test-class">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, quis, soluta! Alias, aliquam asperiores consectetur culpa error et facere fugiat ipsum molestias nemo, perspiciatis quae quam sit sunt suscipit voluptatem.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid autem distinctio et fugit non numquam optio quod, reiciendis vel vero. Doloremque illo ipsa nihil nostrum pariatur sint temporibus. Commodi, provident?</p>
+    </div>
+    <div class="test-class">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, quis, soluta! Alias, aliquam asperiores consectetur culpa error et facere fugiat ipsum molestias nemo, perspiciatis quae quam sit sunt suscipit voluptatem.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid autem distinctio et fugit non numquam optio quod, reiciendis vel vero. Doloremque illo ipsa nihil nostrum pariatur sint temporibus. Commodi, provident?</p>
+    </div>
+</div>
+<!--<a href="#" onclick="alert('Hello!')">Link</a>-->
+<!--<a href="#" onclick="sayHello()">Link</a>-->
+<a href="#">Link</a>
+<script>
+    "use strict";
+    const a = document.querySelector('a');
+    function sayHello() {
+        alert('Hello!');
+    }
+    function sayBye() {
+        alert('Bye!');
+    }
+    //
+    // // a.onclick = sayHello;
+    // // a.onclick = function () {
+    // //     alert('Bye!');
+    // // }
+    //
+    // function sayHelloAndBye() {
+    //     sayHello();
+    //     sayBye();
+    // }
+    //
+    // a.onclick = sayHelloAndBye;
+
+    // a.addEventListener('click', sayHello);
+    // a.addEventListener('click', sayBye);
+    // a.removeEventListener('click', sayHello);
+    // a.addEventListener('click', function() {
+    //     alert('Bye!');
+    // });
+    // a.removeEventListener('click', function() {
+    //     alert('Bye!');
+    // });
+    // console.log(document);
+    // console.dir(document);
+
+    // console.log(document.getElementById('id-test'));
+    // console.log(document.getElementsByClassName('test-class'));
+    // console.log(document.getElementsByTagName('p'));
+
+    // console.log(document.querySelector('.test-class:last-child'));
+    // console.log(document.querySelectorAll('.test-class'));
+
+    // const pTags = document.querySelectorAll('p');
+    // pTags.forEach(element => console.log(element));
+
+    // const pTags = document.getElementsByTagName('p');
+    // // for (let i = 0; i < pTags.length; i++) {
+    // //     console.log(pTags[i]);
+    // // }
+    // // for (const key in pTags) {
+    // //     console.log(pTags[key]);
+    // // }
+    // for (const val of pTags) {
+    //     console.log(val);
+    // }
+
+    // const h1Tag = document.querySelector('h1');
+    // console.log(h1Tag.textContent);
+    // console.log(h1Tag.innerText);
+    // console.log(h1Tag.innerHTML);
+    // h1Tag.innerHTML += '<i>!!!</i>';
+    // h1Tag.textContent += '!!!';
+
+    // h1Tag.style.color = 'red';
+    // console.log(h1Tag.style);
+    // console.log(getComputedStyle(h1Tag));
+
+    // const myDiv = document.createElement('div');
+    // const i = document.createElement('i');
+    // i.textContent = 'Hello!';
+    //
+    // myDiv.appendChild(i);
+    // document.body.appendChild(myDiv);
+    // document.querySelector('body').appendChild(myDiv);
+    // document.querySelector('body').insertAdjacentHTML('beforebegin', '<div><i>Hello!</i></div>');
+    // document.querySelector('body').insertAdjacentHTML('afterbegin', '<div><i>Hello!</i></div>');
+    // document.querySelector('body').insertAdjacentHTML('beforeend', '<div><i>Hello!</i></div>');
+    // document.querySelector('body').insertAdjacentHTML('afterend', '<div><i>Hello!</i></div>');
+
+    // const h1Tag = document.querySelector('h1');
+    // const h1Tag = document.querySelector('h1').cloneNode(true);
+    // const parentElement = document.getElementById('id-test');
+    // const refElement = parentElement.querySelector('.test-class:last-child');
+    //
+    // parentElement.insertBefore(h1Tag, refElement);
+
+    // const h1Tag = document.querySelector('h1');
+    // h1Tag.remove();
+    // console.log(h1Tag);
+    // h1Tag.parentElement.removeChild(h1Tag);
+
+    window.addEventListener('load', function () {
+        alert('load');
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        alert('DOMContentLoaded');
+    });
+
+    window.addEventListener('beforeunload', function () {
+        //...
+    });
+</script>
+</body>
+</html>
