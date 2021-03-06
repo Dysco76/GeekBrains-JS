@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    .square {
+      display: inline-flex;
+      width: 50px;
+      height: 50px;
+      justify-content: center;
+      align-items: center;
+      vertical-align: middle;
+    }
+
+    .square-black {
+      background-color: #333;
+    }
+
+    .square-white {
+      background-color: #eee;
+    }
+  </style>
+
+
+</head>
+
+<body>
+
+
+  <script>
+    const createBoard = function () {
+      const container = document.createElement("div");
+      container.classList.add('container');
+
+      let currentClass = 'square-white';
+      const letters = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+
+      const switchColor = function () {
+        currentClass = currentClass === 'square-white' ? 'square-black' : 'square-white';
+      }
+
+      for (let i = 0; i < 9; i++) {
+        container.insertAdjacentHTML('beforeend', `<div class="square">${letters[i]}</div>`);
+      }
+      container.insertAdjacentHTML('beforeend', '<br>');
+
+      for (let i = 0; i < 8; i++) {
+
+        for (let j = 0; j < 9; j++) {
+          if (j === 0) {
+            container.insertAdjacentHTML('beforeend', `<div class="square">${i + 1}</div>`);
+          } else {
+            container.insertAdjacentHTML('beforeend', `<div class="square ${currentClass}"></div>`);
+            switchColor();
+          }
+        }
+
+        container.insertAdjacentHTML('beforeend', '<br>');
+        switchColor();
+      }
+
+      return container;
+    }
+
+    const renderBoard = function () {
+      const body = document.querySelector('body');
+      body.append(createBoard());
+    }
+
+    renderBoard();
+
+  </script>
+</body>
+
+</html>

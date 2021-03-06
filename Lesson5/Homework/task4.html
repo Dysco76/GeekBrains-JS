@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="catalog"></div>
+
+
+  <script>
+    'use strict'
+    const body = document.querySelector('body');
+    const catalog = document.querySelector('#catalog');
+    const products = [
+      {
+        title: 'item1',
+        price: 150,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item2',
+        price: 50,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item3',
+        price: 400,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item4',
+        price: 1000,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item5',
+        price: 15,
+        imgName: 'placeholder.jpg',
+      }
+    ]
+
+    const createProductCard = function (product) {
+      const productCard = document.createElement("div");
+
+      const productImg = `<img src="./${product.imgName}" style="margin-bottom: 30px;">`
+
+      const productTitle = `<h3 style="margin-bottom: 30px">${product.title}</h3>`;
+
+      const productPrice = `<p>Price: ${product.price}$</p>`;
+
+      const cardElems = [productImg, productTitle, productPrice]
+
+      productCard.style.cssText = 'max-width: 200px; padding: 30px; border: 1px solid black; display: flex; flex-direction: column; margin: 20px'
+
+      for (let elem of cardElems) {
+        console.log(elem);
+        productCard.innerHTML += elem;
+      }
+
+      return productCard
+    }
+
+    const renderCatalog = function (products) {
+      catalog.style.cssText = 'max-width: 1200px; margin: 100px auto; display: flex; flex-wrap: wrap; flex-wrap: wrap; justify-content: center; border: 1px solid red;'
+
+      products.forEach(product => catalog.append(createProductCard(product)))
+    }
+
+    renderCatalog(products);
+
+  </script>
+</body>
+
+</html>
