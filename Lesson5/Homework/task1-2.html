@@ -15,14 +15,23 @@
       justify-content: center;
       align-items: center;
       vertical-align: middle;
+      font-weight: 700;
     }
 
     .square-black {
-      background-color: #333;
+      background-color: #B58762;
     }
 
     .square-white {
-      background-color: #eee;
+      background-color: #EFDAB4;
+    }
+
+    .figure-white {
+      color: #fff;
+    }
+
+    .figure-black {
+      color: #000;
     }
   </style>
 
@@ -67,12 +76,32 @@
       return container;
     }
 
+    const setFigures = function () {
+      const figures = ['Л', 'К', 'С', 'Кор', 'Ф', 'С', 'К', 'Л'];
+      const pawn = 'П';
+
+      const squares = Array.from(document.querySelectorAll('.square')).filter(square => square.classList.length > 1);
+
+      squares.forEach((square, index) => {
+        if (index < 8) {
+          square.insertAdjacentHTML('beforeend', `<span class="figure-white">${figures[index]}</span>`)
+        } else if (index > 7 && index < 16) {
+          square.insertAdjacentHTML('beforeend', `<span class="figure-white">${pawn}</span>`)
+        } else if (index > 47 && index < 56) {
+          square.textContent = pawn;
+        } else if (index > 55) {
+          square.textContent = figures[index - 56]
+        }
+      })
+    }
+
     const renderBoard = function () {
       const body = document.querySelector('body');
       body.append(createBoard());
     }
 
     renderBoard();
+    setFigures();
 
   </script>
 </body>
