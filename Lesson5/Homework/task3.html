@@ -32,13 +32,12 @@
         }
       ],
 
-      countGoods() { return this.products.length },
+      countGoods() {
+        return this.products.reduce((totalGoods, product) => totalGoods += product.quantity, 0)
+      },
 
       countPrice() {
-        const products = this.products;
-        let total = products.reduce((totalPrice, product) => totalPrice += product.price * product.quantity, 0)
-
-        return total
+        return this.products.reduce((totalPrice, product) => totalPrice += product.price * product.quantity, 0)
       },
     }
 
