@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div class="cart"></div>
+
+  <script>
+    const cart = {
+      products: [
+        {
+          title: 'item1',
+          price: 150,
+          quantity: 3,
+        },
+        {
+          title: 'item2',
+          price: 50,
+          quantity: 5,
+        },
+        {
+          title: 'item3',
+          price: 400,
+          quantity: 1,
+        }
+      ],
+
+      countGoods() {
+        return this.products.reduce((totalGoods, product) => totalGoods += product.quantity, 0)
+      },
+
+      countPrice() {
+        return this.products.reduce((totalPrice, product) => totalPrice += product.price * product.quantity, 0)
+      },
+    }
+
+
+    const renderCart = function () {
+      const cartElement = document.querySelector('.cart');
+      cartElement.style.cssText = 'width: 500px; height: 500px; margin: 200px auto; font-size: 24px; display: flex; justify-content: center; align-items: center; border: 1px solid black;';
+
+      if (!cart.countGoods() > 0) {
+        cartElement.textContent = 'Корзина пуста!'
+      } else {
+        cartElement.textContent = `В корзине: ${cart.countGoods()} товаров на сумму ${cart.countPrice()} рублей`;
+      }
+    }
+
+    renderCart();
+  </script>
+</body>
+
+</html>

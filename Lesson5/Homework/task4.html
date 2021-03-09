@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="catalog"></div>
+
+
+  <script>
+    'use strict'
+    const body = document.querySelector('body');
+    const catalog = document.querySelector('#catalog');
+    const products = [
+      {
+        title: 'item1',
+        price: 150,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item2',
+        price: 50,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item3',
+        price: 400,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item4',
+        price: 1000,
+        imgName: 'placeholder.jpg',
+      },
+      {
+        title: 'item5',
+        price: 15,
+        imgName: 'placeholder.jpg',
+      }
+    ]
+
+    const setStyles = function (element, styleText) {
+      element.style.cssText = styleText;
+      return element
+    }
+
+    const setAttr = function (element, attributes) {
+      attributes.forEach(attr => element.setAttribute(attr.name, attr.value));
+      return element;
+    }
+
+    const makeElement = function (tag, elementText = '', styleText = '', attributes = []) {
+      const element = document.createElement(tag);
+      element.textContent = elementText;
+
+      if (styleText) {
+        setStyles(element, styleText);
+      }
+
+      if (attributes) {
+        setAttr(element, attributes);
+      }
+
+      return element;
+    }
+
+    const createProductCard = function (product) {
+      const cardStyles = 'max-width: 200px; padding: 30px; border: 1px solid black; display: flex; flex-direction: column; margin: 20px'
+
+      const productCard = makeElement('div', null, cardStyles);
+
+      productCard.appendChild(makeElement('img', null, 'margin-bottom: 30px;', [{ name: 'src', value: product.imgName }]))
+
+      productCard.appendChild(makeElement('h3', product.title, 'margin-bottom: 30px;'))
+
+      productCard.appendChild(makeElement('p', `Price: ${product.price}$`))
+
+
+      return productCard;
+    }
+
+    const renderCatalog = function (products) {
+      setStyles(catalog, 'max-width: 1200px; margin: 100px auto; display: flex; flex-wrap: wrap; flex-wrap: wrap; justify-content: center; border: 1px solid red;');
+
+      products.forEach(product => catalog.appendChild(createProductCard(product)))
+    }
+
+    renderCatalog(products);
+
+  </script>
+</body>
+
+</html>
