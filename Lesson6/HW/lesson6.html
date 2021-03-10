@@ -28,8 +28,24 @@
       padding: 20px;
     }
 
-    .product img {
+    .product-photos {
+      display: grid;
+      grid-template-columns: repeat(2, 80px);
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .product-photos div {
+      border: 1px solid #333;
+      width: 80px;
+      height: 80px;
+    }
+
+    .product-photo {
+      cursor: pointer;
       width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .product input {
@@ -49,6 +65,66 @@
       border: 1px solid black;
       padding: 0 10px 10px;
     }
+
+
+
+    .photo-modal {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.33);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .photo-modal div {
+      position: relative;
+      width: 400px;
+    }
+
+    .photo-modal img {
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .photo-button {
+      background-color: transparent;
+      border: none;
+      font-size: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .photo-close {
+      position: absolute;
+      top: 50px;
+      right: 50px;
+      color: red;
+    }
+
+    .photo-prev,
+    .photo-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .photo-prev {
+      left: -100px;
+    }
+
+    .photo-next {
+      right: -100px;
+    }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 
@@ -63,8 +139,148 @@
 
 
 
+
+  <!-- <div class="product">
+      <div class="product-photos">
+        <div>
+          <image src="images/заяц-1.jpg" class="product-photo"></image>
+        </div>
+        <div>
+          <image src="images/заяц-2.jpg" class="product-photo"></image>
+        </div>
+        <div>
+          <image src="images/заяц-3.jpg" class="product-photo"></image>
+        </div>
+        <div>
+          <image src="images/заяц-4.jpg" class="product-photo"></image>
+        </div>
+      </div>
+      <h3>${product.title}</h3>
+      <p>${product.price}$</p>
+      <input type="number" name="quant" id="quant">
+      <label for="quant">Количество</label>
+      <button id="${product.id}">Добавить в корзину</button>
+    </div> -->
+
+  <!-- <div class="photo-modal">
+    <button class="photo-button photo-close">X</button>
+    <div>
+      <button class="photo-button photo-prev">
+        < </button>
+          <img src="images/заяц-1.jpg" alt="">
+          <button class="photo-button photo-next">></button>
+    </div>
+  </div> -->
+
   <script>
     'use strict'
+
+    const photos = {
+      imagesPath: 'images/',
+      body: document.body,
+
+      init() {
+        this.insertModal();
+        this.addClickHandler(catalog.catalogElement);
+        this.addButtonHandlers();
+      },
+
+      createPhotosContainer(images) {
+        let container = '<div class="product-photos">';
+
+        images.forEach(image => {
+          container += `<div> <img src="${this.imagesPath}${image}.jpg" class="product-photo"></div>`;
+        })
+
+        container += '</div>';
+        return container;
+      },
+
+      insertModal() {
+        this.body.insertAdjacentHTML('beforeend',
+          `<div class="photo-modal hidden">
+              <button class="photo-button photo-close">X</button>
+              <div>
+                <button class="photo-button photo-prev"><</button>
+                <img src="">
+                <button class="photo-button photo-next">></button>
+                </div>
+              </div>`)
+
+        this.modal = document.querySelector('.photo-modal');
+      },
+
+      addClickHandler(catalogElement) {
+        catalogElement.addEventListener('click', e => {
+          const clicked = e.target;
+
+          if (clicked.tagName !== 'IMG') return;
+
+          const images = this.getAllImageSiblings(clicked);
+
+          this.addContentToModal(clicked.getAttribute('src'), images);
+
+          this.revealModal();
+        })
+      },
+
+      getAllImageSiblings(clickedImage) {
+        let images = [];
+        for (let imageDiv of clickedImage.closest('.product-photos').children) {
+          images.push(imageDiv.children[0].getAttribute('src'))
+        }
+
+        return images;
+      },
+
+      addContentToModal(currentImg, allImgs) {
+        this.modalImg = this.modal.querySelector('img');
+        this.modalImg.src = currentImg;
+
+        this.allImgs = allImgs;
+      },
+
+      revealModal() {
+        this.modal.classList.toggle('hidden')
+      },
+
+      addButtonHandlers() {
+        const modalImg = this.modal.querySelector('img');
+
+        this.modal.addEventListener('click', e => {
+          const clicked = e.target;
+
+          if (clicked.tagName !== 'BUTTON') return;
+
+          if (clicked.classList.contains('photo-close')) this.handleCloseModal()
+          else if (clicked.classList.contains('photo-prev')) this.handlePrevImg()
+          else if (clicked.classList.contains('photo-next')) this.handleNextImg()
+
+        })
+      },
+
+      handleCloseModal() {
+        this.modal.classList.add('hidden')
+      },
+
+      handlePrevImg() {
+        const prevImg = this.allImgs.indexOf(this.modalImg.getAttribute('src')) - 1;
+        if (prevImg >= 0) {
+          this.modalImg.src = this.allImgs[prevImg]
+        } else {
+          return
+        }
+      },
+
+      handleNextImg() {
+        const nextImg = this.allImgs.indexOf(this.modalImg.getAttribute('src')) + 1;
+        if (nextImg < this.allImgs.length) {
+          this.modalImg.src = this.allImgs[nextImg]
+        } else {
+          return
+        }
+      },
+    }
 
     const catalog = {
       catalogElement: document.querySelector('.catalog'),
@@ -74,25 +290,25 @@
           id: '111',
           title: 'Зайчик',
           price: 150,
-          imgName: 'placeholder.jpg',
+          images: ['заяц-1', 'заяц-2', 'заяц-3', 'заяц-4'],
         },
         {
           id: '222',
           title: 'Пончик',
           price: 50,
-          imgName: 'placeholder.jpg',
+          images: ['пончик-1', 'пончик-2', 'пончик-3', 'пончик-4']
         },
         {
           id: '333',
           title: 'Макарончик',
           price: 400,
-          imgName: 'placeholder.jpg',
+          images: ['макарон-1', 'макарон-2', 'макарон-3'],
         },
         {
           id: '444',
           title: 'Одеколончик',
           price: 1000,
-          imgName: 'placeholder.jpg',
+          images: ['одеколон-1', 'одеколон-2', 'одеколон-3'],
         },
       ],
 
@@ -104,7 +320,7 @@
 
       createProductCard(product) {
         return `<div class="product">
-                  <img src="${product.imgName}" alt="">
+                  ${photos.createPhotosContainer(product.images)}
                   <h3>${product.title}</h3>
                   <p>${product.price}$</p>
                   <input type="number" name="quant" id="quant">
@@ -232,6 +448,7 @@
 
     catalog.init();
     cart.init();
+    photos.init();
   </script>
 
 </body>
