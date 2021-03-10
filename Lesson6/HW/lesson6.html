@@ -99,6 +99,7 @@
       init() {
         this.renderCatalog();
         this.addButtonHandler();
+        this.addQuantHandler();
       },
 
       createProductCard(product) {
@@ -142,9 +143,18 @@
 
           if (clicked.tagName !== 'BUTTON') return
 
-          cart.addProduct(this.getClickedProduct(clicked), this.getProductQuant(clicked));
+          cart.addProduct(Object.assign({}, this.getClickedProduct(clicked)), this.getProductQuant(clicked));
         })
       },
+
+      addQuantHandler() {
+        this.catalogElement.addEventListener('change', e => {
+          const inputed = e.target;
+          if (e.target.value <= 0) {
+            e.target.value = 1;
+          }
+        })
+      }
     }
 
     const cart = {
