@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    h3,
+    p {
+      margin: 10px 0;
+    }
+
+    .catalog {
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 270px);
+      justify-content: start;
+      gap: 10px;
+    }
+
+    .product {
+      box-sizing: border-box;
+      background-color: #eee;
+      max-width: 270px;
+      padding: 20px;
+    }
+
+    .product-photos {
+      display: grid;
+      grid-template-columns: repeat(2, 80px);
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .product-photos div {
+      border: 1px solid #333;
+      width: 80px;
+      height: 80px;
+    }
+
+    .product-photo {
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product input {
+      width: 40px;
+      margin-bottom: 10px;
+    }
+
+    .cart {
+      border-top: 2px solid black;
+      padding-top: 40px;
+      margin: 100px 0;
+      font-size: 24px;
+    }
+
+    .cart-item {
+      background-color: #eee;
+      border: 1px solid black;
+      padding: 0 10px 10px;
+    }
+
+
+
+    .photo-modal {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.33);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .photo-modal div {
+      position: relative;
+      width: 400px;
+    }
+
+    .photo-modal img {
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .photo-button {
+      background-color: transparent;
+      border: none;
+      font-size: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 10px;
+    }
+
+    .photo-close {
+      position: absolute;
+      top: 50px;
+      right: 50px;
+      color: red;
+    }
+
+    .photo-prev,
+    .photo-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .photo-prev {
+      left: -100px;
+    }
+
+    .photo-next {
+      right: -100px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="catalog">
+
+  </div>
+  <div class="cart">
+
+  </div>
+
+  <script>
+    'use strict'
+
+    const photos = {
+      imagesPath: 'images/',
+      body: document.body,
+
+      init(catalogObject) {
+        this.insertModal();
+        this.addClickHandler(catalogObject.catalogElement);
+        this.addButtonHandlers();
+      },
+
+      createPhotosContainer(images) {
+        let container = '<div class="product-photos">';
+
+        images.forEach(image => {
+          container += `<div> <img src="${this.imagesPath}${image}.jpg" class="product-photo"></div>`;
+        })
+
+        container += '</div>';
+        return container;
+      },
+
+      insertModal() {
+        this.body.insertAdjacentHTML('beforeend',
+          `<div class="photo-modal hidden">
+              <button class="photo-button photo-close">X</button>
+              <div>
+                <button class="photo-button photo-prev"><</button>
+                <img src="">
+                <button class="photo-button photo-next">></button>
+                </div>
+              </div>`)
+
+        this.modal = document.querySelector('.photo-modal');
+      },
+
+      addClickHandler(catalogElement) {
+        catalogElement.addEventListener('click', e => {
+          const clicked = e.target;
+
+          if (clicked.tagName !== 'IMG') return;
+
+          const images = this.getAllImageSiblings(clicked);
+
+          this.addContentToModal(clicked.getAttribute('src'), images);
+
+          this.revealModal();
+        })
+      },
+
+      getAllImageSiblings(clickedImage) {
+        let images = [];
+        for (let imageDiv of clickedImage.closest('.product-photos').children) {
+          images.push(imageDiv.children[0].getAttribute('src'))
+        }
+
+        return images;
+      },
+
+      addContentToModal(currentImg, allImgs) {
+        this.modalImg = this.modal.querySelector('img');
+        this.modalImg.src = currentImg;
+
+        this.allImgs = allImgs;
+      },
+
+      revealModal() {
+        this.modal.classList.toggle('hidden')
+      },
+
+      addButtonHandlers() {
+        const modalImg = this.modal.querySelector('img');
+
+        this.modal.addEventListener('click', e => {
+          const clicked = e.target;
+
+          if (clicked.tagName !== 'BUTTON') return;
+
+          if (clicked.classList.contains('photo-close')) this.handleCloseModal()
+          else if (clicked.classList.contains('photo-prev')) this.handlePrevImg()
+          else if (clicked.classList.contains('photo-next')) this.handleNextImg()
+
+        })
+      },
+
+      handleCloseModal() {
+        this.modal.classList.add('hidden')
+      },
+
+      handlePrevImg() {
+        const prevImg = this.allImgs.indexOf(this.modalImg.getAttribute('src')) - 1;
+        if (prevImg >= 0) {
+          this.modalImg.src = this.allImgs[prevImg]
+        } else {
+          return
+        }
+      },
+
+      handleNextImg() {
+        const nextImg = this.allImgs.indexOf(this.modalImg.getAttribute('src')) + 1;
+        if (nextImg < this.allImgs.length) {
+          this.modalImg.src = this.allImgs[nextImg]
+        } else {
+          return
+        }
+      },
+    }
+
+    const catalog = {
+      catalogElement: document.querySelector('.catalog'),
+
+      products: [
+        {
+          id: '111',
+          title: 'Зайчик',
+          price: 150,
+          images: ['заяц-1', 'заяц-2', 'заяц-3', 'заяц-4'],
+        },
+        {
+          id: '222',
+          title: 'Пончик',
+          price: 50,
+          images: ['пончик-1', 'пончик-2', 'пончик-3', 'пончик-4']
+        },
+        {
+          id: '333',
+          title: 'Макарончик',
+          price: 400,
+          images: ['макарон-1', 'макарон-2', 'макарон-3'],
+        },
+        {
+          id: '444',
+          title: 'Одеколончик',
+          price: 1000,
+          images: ['одеколон-1', 'одеколон-2', 'одеколон-3'],
+        },
+      ],
+
+      init(cartObject, photosObject) {
+        this.renderCatalog(photosObject);
+        this.addButtonHandler(cartObject);
+        this.addQuantHandler();
+      },
+
+      createProductCard(product, photosObject) {
+        return `<div class="product">
+                  ${photosObject.createPhotosContainer(product.images)}
+                  <h3>${product.title}</h3>
+                  <p>${product.price}$</p>
+                  <input type="number" name="quant" id="quant">
+                  <label for="quant">Количество</label>
+                  <button id="${product.id}">Добавить в корзину</button>
+                </div>`
+      },
+
+      renderCatalog(photosObject) {
+        if (this.products.length) {
+          this.products.forEach(product => this.catalogElement.insertAdjacentHTML('beforeend', this.createProductCard(product, photosObject)));
+        } else {
+          this.catalogElement.insertAdjacentHTML('beforeend', '<h3>В каталоге пусто!</h3>')
+        }
+      },
+
+      getProductQuant(clickedProduct) {
+        const quantInput = clickedProduct.parentElement.querySelector('input');
+        let quantity = quantInput.value;
+
+        if (!quantity) {
+          quantity = 1;
+        }
+
+        quantInput.value = '';
+        return quantity
+      },
+
+      getClickedProduct(clickedProduct) {
+        return this.products.find(product => product.id === clickedProduct.id);
+      },
+
+      addButtonHandler(cartObject) {
+        this.catalogElement.addEventListener('click', e => {
+          const clicked = e.target;
+
+          if (clicked.tagName !== 'BUTTON') return
+
+          cartObject.addProduct(Object.assign({}, this.getClickedProduct(clicked)), this.getProductQuant(clicked));
+        })
+      },
+
+      addQuantHandler() {
+        this.catalogElement.addEventListener('change', e => {
+          const inputed = e.target;
+          if (e.target.value <= 0) {
+            e.target.value = 1;
+          }
+        })
+      }
+    }
+
+    const cart = {
+      cartElement: document.querySelector('.cart'),
+
+      products: [
+      ],
+
+      init() {
+        this.renderCart();
+        this.removeProductHandler();
+      },
+
+      createCardItem(product) {
+        return `<div class="cart-item">
+                  <h3>${product.title}</h3>
+                  <p>Цена: ${product.price}$</p>
+                  <p>Количество ${product.quantity}</p>
+                  <button id="${product.id}">Удалить товар</button>
+                </div>`;
+      },
+
+      countGoods() {
+        return this.products.reduce((totalGoods, product) => totalGoods += product.quantity, 0)
+      },
+
+      countPrice() {
+        return this.products.reduce((totalPrice, product) => totalPrice += product.price * product.quantity, 0)
+      },
+
+      getCartTotal() {
+        return `В корзине: ${cart.countGoods()} товаров на сумму ${cart.countPrice()} рублей`
+      },
+
+      addProduct(product, quantity) {
+        const isProductInCart = this.findProductByID(product.id);
+
+        if (isProductInCart) {
+          isProductInCart.quantity += +quantity;
+        } else {
+          product.quantity = +quantity;
+          this.products.push(product)
+        }
+
+
+        this.renderCart();
+      },
+
+      findProductByID(id) {
+        return this.products.find(product => product.id === id);
+      },
+
+      removeProductHandler() {
+        this.cartElement.addEventListener('click', e => {
+          const clicked = e.target;
+
+          if (clicked.tagName !== 'BUTTON') return;
+
+          this.products.splice(this.products.indexOf(this.findProductByID(clicked.id)), 1);
+
+          this.renderCart();
+        })
+      },
+
+      renderCart() {
+        if (!this.countGoods() > 0) {
+          this.cartElement.textContent = 'Корзина пуста!'
+        } else {
+          this.cartElement.textContent = '';
+          this.cartElement.insertAdjacentHTML('beforeend', this.getCartTotal());
+          this.products.forEach(product => this.cartElement.insertAdjacentHTML('beforeend', this.createCardItem(product)))
+        }
+      }
+    }
+
+    catalog.init(cart, photos);
+    cart.init();
+    photos.init(catalog);
+  </script>
+
+</body>
+
+</html>
