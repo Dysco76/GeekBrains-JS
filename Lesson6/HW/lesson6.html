@@ -278,12 +278,12 @@
       ],
 
       init(cartObject, photosObject) {
-        this.renderCatalog();
+        this.renderCatalog(photosObject);
         this.addButtonHandler(cartObject);
         this.addQuantHandler();
       },
 
-      createProductCard(product) {
+      createProductCard(product, photosObject) {
         return `<div class="product">
                   ${photosObject.createPhotosContainer(product.images)}
                   <h3>${product.title}</h3>
@@ -294,7 +294,7 @@
                 </div>`
       },
 
-      renderCatalog() {
+      renderCatalog(photosObject) {
         if (this.products.length) {
           this.products.forEach(product => this.catalogElement.insertAdjacentHTML('beforeend', this.createProductCard(product, photosObject)));
         } else {
