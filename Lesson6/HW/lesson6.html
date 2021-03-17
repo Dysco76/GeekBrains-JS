@@ -144,9 +144,9 @@
       imagesPath: 'images/',
       body: document.body,
 
-      init() {
+      init(catalogObject) {
         this.insertModal();
-        this.addClickHandler(catalog.catalogElement);
+        this.addClickHandler(catalogObject.catalogElement);
         this.addButtonHandlers();
       },
 
@@ -277,7 +277,7 @@
         },
       ],
 
-      init(cartObject) {
+      init(cartObject, photosObject) {
         this.renderCatalog();
         this.addButtonHandler(cartObject);
         this.addQuantHandler();
@@ -285,7 +285,7 @@
 
       createProductCard(product) {
         return `<div class="product">
-                  ${photos.createPhotosContainer(product.images)}
+                  ${photosObject.createPhotosContainer(product.images)}
                   <h3>${product.title}</h3>
                   <p>${product.price}$</p>
                   <input type="number" name="quant" id="quant">
@@ -296,7 +296,7 @@
 
       renderCatalog() {
         if (this.products.length) {
-          this.products.forEach(product => this.catalogElement.insertAdjacentHTML('beforeend', this.createProductCard(product)));
+          this.products.forEach(product => this.catalogElement.insertAdjacentHTML('beforeend', this.createProductCard(product, photosObject)));
         } else {
           this.catalogElement.insertAdjacentHTML('beforeend', '<h3>В каталоге пусто!</h3>')
         }
@@ -411,9 +411,9 @@
       }
     }
 
-    catalog.init(cart);
+    catalog.init(cart, photos);
     cart.init();
-    photos.init();
+    photos.init(catalog);
   </script>
 
 </body>
