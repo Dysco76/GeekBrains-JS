@@ -23,6 +23,29 @@
     display: flex;
     justify-content: center;
 }
+
+#game-wrap {
+  position: relative;
+}
+
+#score {
+  position: absolute;
+  top: 0;
+  right: 26%;
+}
+
+.score-heading {
+  color: white;
+  font-size: 28px;
+  display: block;
+}
+
+.score-count {
+  display: block;
+  text-align: center;
+  color: red;
+  font-size: 45px;
+}
 td.cell{
     width: 20px;
     height: 20px;
@@ -43,4 +66,7 @@ td.cell{
 }
 .disabled:hover{
     background: #7c7c7c;
+}
+.obstacle {
+  background-color: violet;
 }

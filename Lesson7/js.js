@@ -3,8 +3,9 @@
 const settings = {
   rowsCount: 21,
   colsCount: 21,
-  speed: 2,
+  speed: 5,
   winFoodCount: 50,
+  obstaclesCount: 10,
 };
 
 const config = {
@@ -26,6 +27,10 @@ const config = {
     return this.settings.speed;
   },
 
+  getObstaclesCount() {
+    return this.settings.obstaclesCount;
+  },
+
   getWinFoodCount() {
     return this.settings.winFoodCount;
   },
@@ -33,7 +38,7 @@ const config = {
   validate() {
     const result = {
       isValid: true,
-      error: [],
+      errors: [],
     };
 
     if (this.getRowsCount() < 10 || this.getRowsCount() > 30) {
@@ -54,6 +59,11 @@ const config = {
     if (this.getWinFoodCount() < 5 || this.getWinFoodCount() > 50) {
       result.isValid = false;
       result.errors.push('Неверные настройки, значение winFoodCount должно быть в диапазоне [5, 50].');
+    }
+
+    if (this.getObstaclesCount() < 0 || this.getObstaclesCount() > Math.floor((this.getRowsCount() * this.getColsCount()) * 0.05)) {
+      result.isValid = false;
+      result.errors.push(`Неверные настройки, значение obstaclesCount должно быть в диапазоне [0, ${Math.floor((this.getRowsCount() * this.getColsCount()) * 0.05)}].`);
     }
 
     return result;
@@ -87,7 +97,7 @@ const map = {
     console.log(this.cells);
   },
 
-  render(snakePointsArray, foodPoint) {
+  render(snakePointsArray, foodPoint, obstaclesArray) {
     for (const cell of this.usedCells) {
       cell.className = 'cell';
     }
@@ -100,6 +110,13 @@ const map = {
       snakeCell.classList.add(index === 0 ? 'snakeHead' : 'snakeBody');
       this.usedCells.push(snakeCell);
     });
+
+    obstaclesArray.forEach(point => {
+      const obstacleCell = this.cells[`x${point.x}_y${point.y}`]
+
+      obstacleCell.classList.add('obstacle')
+      this.usedCells.push(obstacleCell);
+    })
 
     const foodCell = this.cells[`x${foodPoint.x}_y${foodPoint.y}`];
 
@@ -131,9 +148,9 @@ const snake = {
     return this.body.some((snakePoint) => snakePoint.x === point.x && snakePoint.y === point.y);
   },
 
-  makeStep() {
+  makeStep(rows, cols) {
     this.lastStepDirection = this.direction;
-    this.body.unshift(this.getNextStepHeadPoint()); // [p3, p2, p1] => [p4, p3, p2]
+    this.body.unshift(this.getNextStepHeadPoint(rows, cols)); // [p3, p2, p1] => [p4, p3, p2]
     this.body.pop();
   },
 
@@ -143,14 +160,26 @@ const snake = {
     this.body.push(lastBodyPoint);
   },
 
-  getNextStepHeadPoint() {
+  getNextStepHeadPoint(rows, cols) {
     const headPoint = this.body[0];
 
     switch (this.direction) {
-      case 'up': return {x: headPoint.x, y: headPoint.y - 1};
-      case 'right': return {x: headPoint.x + 1, y: headPoint.y};
-      case 'down': return {x: headPoint.x, y: headPoint.y + 1};
-      case 'left': return {x: headPoint.x - 1, y: headPoint.y};
+      case 'up':
+
+        if (headPoint.y === 0) return { x: headPoint.x, y: rows - 1 };
+        return { x: headPoint.x, y: headPoint.y - 1 };
+
+      case 'right':
+        if (headPoint.x === cols - 1) return { x: 0, y: headPoint.y };
+        return { x: headPoint.x + 1, y: headPoint.y };
+
+      case 'down':
+        if (headPoint.y === rows - 1) return { x: headPoint.x, y: 0 }
+        return { x: headPoint.x, y: headPoint.y + 1 };
+
+      case 'left':
+        if (headPoint.x === 0) return { x: cols - 1, y: headPoint.y }
+        return { x: headPoint.x - 1, y: headPoint.y };
     }
   },
 
@@ -178,6 +207,31 @@ const food = {
   isOnPoint(point) {
     return this.x === point.x && this.y === point.y;
   },
+};
+
+const obstacle = {
+  coordinates: [],
+
+  init(pointsArray) {
+    this.coordinates = [];
+    this.setCoordinates(pointsArray)
+  },
+
+  getCoordinates() {
+    return this.coordinates;
+  },
+
+  setCoordinates(pointsArray) {
+    this.coordinates = [];
+    pointsArray.forEach(point => this.coordinates.push({ x: point.x, y: point.y }));
+  },
+
+  isOnPoint(point) {
+    return this.coordinates.some(obstacle => obstacle.x === point.x && obstacle.y === point.y);
+  },
+
+
+
 };
 
 const status = {
@@ -210,7 +264,17 @@ const game = {
   snake,
   food,
   status,
+  obstacle,
   tickInterval: null,
+  score: document.querySelector('.score-count'),
+  // Задание 1
+  addPoint() {
+    this.score.textContent = String(+this.score.textContent + 1);
+  },
+
+  resetScore() {
+    this.score.textContent = '0';
+  },
 
   init(userSettings) {
     this.config.init(userSettings);
@@ -283,15 +347,17 @@ const game = {
     const lastStepDirection = this.snake.getLastStepDirection();
 
     return direction === 'up' && lastStepDirection !== 'down' ||
-        direction === 'right' && lastStepDirection !== 'left' ||
-        direction === 'down' && lastStepDirection !== 'up' ||
-        direction === 'left' && lastStepDirection !== 'right';
+      direction === 'right' && lastStepDirection !== 'left' ||
+      direction === 'down' && lastStepDirection !== 'up' ||
+      direction === 'left' && lastStepDirection !== 'right';
   },
 
   reset() {
     this.stop();
     this.snake.init(this.getStartSnakeBody(), 'up');
     this.food.setCoordinates(this.getRandomFreeCoordinates());
+    this.obstacle.setCoordinates(this.getObstaclePoints());
+    this.resetScore();
     this.render();
   },
 
@@ -304,8 +370,43 @@ const game = {
     ];
   },
 
+  getObstaclePoints() {
+    const pointsArray = [];
+    for (let obstacle = 0; obstacle < this.config.getObstaclesCount(); obstacle++) {
+      const point = this.getRandomFreeCoordinates();
+      if (!this.isValidObstacle(point, pointsArray)) {
+        obstacle--
+        continue;
+      }
+
+      pointsArray.push(point);
+    }
+    console.log(pointsArray);
+
+    return pointsArray;
+  },
+
+  isValidObstacle(currPoint, pointsArray) {
+    if (currPoint.x === 0 ||
+      currPoint.y === 0 ||
+      currPoint.x === this.config.getColsCount() - 1 ||
+      currPoint.y === this.config.getRowsCount() - 1 ||
+      currPoint.y === this.getStartSnakeBody()[0].y - 1) {
+      return false
+    } else if (pointsArray.some(point => {
+      return ((point.x === currPoint.x - 1) && (point.y === currPoint.y - 1)) ||
+        ((point.x === currPoint.x + 1) && (point.y === currPoint.y + 1)) ||
+        ((point.x === currPoint.x + 1) && (point.y === currPoint.y - 1)) ||
+        ((point.x === currPoint.x - 1) && (point.y === currPoint.y + 1))
+    })) {
+      console.log('diagonal contact!')
+      return false
+    }
+    return true
+  },
+
   getRandomFreeCoordinates() {
-    const exclude = [this.food.getCoordinates(), ...this.snake.getBody()];
+    const exclude = [this.food.getCoordinates(), ...this.snake.getBody(), ...this.obstacle.getCoordinates()];
     // without ... -  [{}, [{}, {}, {}]] => with ... [{}, {}, {}, {}];
     while (true) {
       const rndPoint = {
@@ -320,7 +421,7 @@ const game = {
   },
 
   render() {
-    this.map.render(this.snake.getBody(), this.food.getCoordinates());
+    this.map.render(this.snake.getBody(), this.food.getCoordinates(), this.obstacle.getCoordinates());
   },
 
   play() {
@@ -353,25 +454,27 @@ const game = {
   tickHandler() {
     if (!this.canMakeStep()) return this.finish();
 
-    if (this.food.isOnPoint(this.snake.getNextStepHeadPoint())) {
+    if (this.food.isOnPoint(this.snake.getNextStepHeadPoint(this.config.getRowsCount(), this.config.getColsCount()))) {
       this.snake.growUp();
+      this.addPoint();
       this.food.setCoordinates(this.getRandomFreeCoordinates());
 
       if (this.isGameWon()) this.finish();
     }
 
-    this.snake.makeStep();
+    this.snake.makeStep(this.config.getRowsCount(), this.config.getColsCount());
     this.render();
   },
 
   canMakeStep() {
-    const nextStepPoint = this.snake.getNextStepHeadPoint();
+    const nextStepPoint = this.snake.getNextStepHeadPoint(this.config.getRowsCount(), this.config.getColsCount());
 
     return !this.snake.isOnPoint(nextStepPoint) &&
-        nextStepPoint.x < this.config.getColsCount() &&
-        nextStepPoint.y < this.config.getRowsCount() &&
-        nextStepPoint.x >= 0 &&
-        nextStepPoint.y >= 0;
+      !this.obstacle.isOnPoint(nextStepPoint) &&
+      nextStepPoint.x < this.config.getColsCount() &&
+      nextStepPoint.y < this.config.getRowsCount() &&
+      nextStepPoint.x >= 0 &&
+      nextStepPoint.y >= 0;
   },
 
   isGameWon() {
@@ -379,4 +482,4 @@ const game = {
   },
 };
 
-game.init({speed: 5});
+game.init({ speed: 5 });
