@@ -277,9 +277,9 @@
         },
       ],
 
-      init() {
+      init(cartObject) {
         this.renderCatalog();
-        this.addButtonHandler();
+        this.addButtonHandler(cartObject);
         this.addQuantHandler();
       },
 
@@ -318,13 +318,13 @@
         return this.products.find(product => product.id === clickedProduct.id);
       },
 
-      addButtonHandler() {
+      addButtonHandler(cartObject) {
         this.catalogElement.addEventListener('click', e => {
           const clicked = e.target;
 
           if (clicked.tagName !== 'BUTTON') return
 
-          cart.addProduct(Object.assign({}, this.getClickedProduct(clicked)), this.getProductQuant(clicked));
+          cartObject.addProduct(Object.assign({}, this.getClickedProduct(clicked)), this.getProductQuant(clicked));
         })
       },
 
@@ -401,7 +401,7 @@
       },
 
       renderCart() {
-        if (!cart.countGoods() > 0) {
+        if (!this.countGoods() > 0) {
           this.cartElement.textContent = 'Корзина пуста!'
         } else {
           this.cartElement.textContent = '';
@@ -411,7 +411,7 @@
       }
     }
 
-    catalog.init();
+    catalog.init(cart);
     cart.init();
     photos.init();
   </script>
