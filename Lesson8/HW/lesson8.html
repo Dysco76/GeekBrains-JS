@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<button id="btn">привет</button>
+<script>
+  // 'use strict';
+  // myFunc();
+  //
+  // function myFunc() {
+  //     console.log('Hello!')
+  // }
+  //
+  // myFunc();
+
+  // console.log(a);
+  // var a = 5;
+  // console.log(a);
+  // var a;
+  // console.log(a);
+  // a = 5;
+  // console.log(a);
+
+  // console.log(a);
+  //
+  // if (false) {
+  //     var a = 5;
+  // }
+  //
+  // console.log(a);
+
+  // console.log(a);
+  // let a = 5;
+  // console.log(a);
+  // function abc () {
+  //     console.log('abc');
+  // }
+  // foo();
+  // var foo = function () {
+  //     console.log('Foo');
+  // }
+  // const foo = function () {
+  //     console.log('Foo');
+  // }
+  // foo()
+  // var foo = abc;
+  // foo();
+
+  // var d = 10;
+  // var foo;
+  // if (d > 3) {
+  //     function foo() {
+  //         console.log('>');
+  //     }
+  // } else {
+  //     function foo() {
+  //         console.log('<');
+  //     }
+  // }
+  // if (d > 3) {
+  //     foo = function () {
+  //         console.log('>');
+  //     }
+  // } else {
+  //     foo = function () {
+  //         console.log('<');
+  //     }
+  // }
+  //
+  // foo();
+  'use strict';
+  // function foo(a, b) {
+  //     console.log(this, a, b);
+  // }
+
+  // foo();
+  // foo.call({name: 'Vasya'}, 10, 20);
+  // foo.apply({name: 'Vasya'}, [10, 20]);
+  // const myFoo = foo.bind({name: 'Vasya'});
+  // const myFoo = function (a, b) {
+  //     console.log(this, a, b);
+  // }.bind({name: 'Vasya'});
+  //
+  // myFoo(10, 20);
+
+  // const game = {
+  //     run() {
+  //         console.log(this);
+  //     },
+  //     // run: function () {
+  //     //     console.log(this);
+  //     // },
+  // };
+
+  // game.run();
+  // const myRun = game.run;
+  // const myRun = function () {
+  //     console.log(this);
+  // };
+
+  // myRun();
+  // console.log(game.run)
+  // console.log(myRun)
+  // console.log(myRun === game.run)
+
+  // const user = {
+  //     name: 'Vasya',
+  //     sayName() {
+  //         console.log(this);
+  //     },
+  // };
+  //
+  // // setTimeout(user.sayName, 1000); // window
+  // setTimeout(() => user.sayName(), 1000); // user
+  // setTimeout(function () {
+  //     user.sayName()
+  // }, 1000); // user
+
+  // const obj = {
+  //     prop: 'hello',
+  //     init() {
+  //         const btn = document.getElementById('btn');
+  //         // console.log(this);
+  //         // const _this = this;
+  //         // btn.addEventListener('click', this.method());
+  //         // btn.addEventListener('click', this.method.bind(this));
+  //         // btn.addEventListener('click', function () {
+  //         //     console.log(this);
+  //         //     console.log(_this);
+  //         //     _this.method();
+  //         // });
+  //         btn.addEventListener('click', () => this.method());
+  //     },
+  //     method() {
+  //         console.log(this);
+  //     }
+  // };
+  //
+  // obj.init();
+
+  // function foo(a, b, ...params) {
+  //     console.log(arguments);
+  //     // console.log([].includes.call(arguments, 5));
+  //     // console.log(Array.prototype.includes.call(arguments, 5));
+  //     // console.log(params.includes(5));
+  //     console.log(params);
+  // }
+  //
+  // foo(1, 5, 7, 39);
+
+  // function foo() {
+  //     let name = 'Vasya';
+  //
+  //     function sayName() {
+  //         console.log(name);
+  //     }
+  //     return sayName;
+  // }
+  //
+  // const myFoo = foo();
+  // myFoo();
+  // console.dir(myFoo);
+
+  // function game() {
+  //     let privateVariable;
+  //
+  //     function privateFunction() {
+  //         console.log('privateFunction запущена');
+  //         console.log('privateVariable: ' + privateVariable);
+  //     }
+  //
+  //     return {
+  //         init(val) {
+  //             privateVariable = val;
+  //             privateFunction();
+  //         }
+  //     };
+  // }
+  //
+  // const myGame = game();
+  // myGame.init(100);
+  // console.log(myGame);
+
+  // function sum(a, b) {
+  //     return a + b;
+  // }
+  // function sum(a) {
+  //     return function (b) {
+  //         return a + b;
+  //     };
+  // }
+  //
+  // const addTwo = sum(10);
+  // // console.dir(addTwo);
+  // // console.log(addTwo(5));
+  // console.log(sum(10)(5));
+
+  // console.log(sum(a)(b)(c)...(n)()); // => вывелась общая сумма
+  // console.log(sum(a)(b)(c)...(n)); // => вывелась общая сумма
+</script>
+</body>
+</html>
